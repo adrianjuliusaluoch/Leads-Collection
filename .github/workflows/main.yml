@@ -2,22 +2,23 @@ name: Send SMS Batch
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # every 15 minutes, adjust as needed
-  workflow_dispatch: {}       # allows manual trigger from the Actions tab
+    - cron: '*/15 * * * *'
+  workflow_dispatch: {}
 
 jobs:
   send-sms:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          pip install gspread google-auth python-dotenv playwright
           playwright install --with-deps chromium
 
       - name: Run SMS sender
@@ -25,5 +26,4 @@ jobs:
           RAISUGAR_EMAIL: ${{ secrets.RAISUGAR_EMAIL }}
           RAISUGAR_PASSWORD: ${{ secrets.RAISUGAR_PASSWORD }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        run: |
-          python your_script.py
+        run: python test.py
