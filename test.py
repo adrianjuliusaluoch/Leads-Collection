@@ -8,7 +8,7 @@ from playwright.sync_api import sync_playwright, expect
 
 # --- Configuration ---
 SPREADSHEET_ID = "1JOUh9RC_tnf9Bin8kZADOKE_Uo1lN_xfiDbQ2gLfyXY"  # Block Farming / Leads Data
-SMS_EXPORT_TAB = "SMS Export"
+SMS_EXPORT_TAB = "SMS Test"
 STATE_TAB = "Automation State"
 BATCH_SIZE = 5
 BATCH_FILE = "sms.csv"
@@ -42,22 +42,33 @@ def get_new_batch(sms_sheet, last_sent_row, batch_size):
     return data_rows[last_sent_row:last_sent_row + batch_size]
 
 
+def normalize_phone(value):
+    """Ensure a Kenyan phone number is a string with a leading zero.
+    Leaves blanks/placeholder values (NULL, N/A, etc.) untouched."""
+    phone = str(value).strip()
+
+    if phone == "" or phone.upper() in ("NULL", "N/A", "NONE"):
+        return phone
+
+    # Strip any accidental non-digit characters (spaces, quotes, etc.)
+    digits_only = "".join(ch for ch in phone if ch.isdigit())
+
+    if digits_only == "":
+        return phone  # nothing usable, leave as-is
+
+    if not digits_only.startswith("0"):
+        digits_only = "0" + digits_only
+
+    return digits_only
+
+
 def write_batch_csv(batch, path):
     with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(["message_id", "contact_name", "contact_detail", "body"])
         for row in batch:
-            writer.writerow([row[0], row[1], row[2], row[3]])
-
-
-def read_batch_from_csv(path):
-    batch = []
-    with open(path, newline="", encoding="utf-8") as f:
-        reader = csv.reader(f)
-        next(reader)
-        for row in reader:
-            batch.append(row)
-    return batch
+            contact_detail = normalize_phone(row[2])
+            writer.writerow([row[0], row[1], contact_detail, row[3]])
 
 
 def do_upload_and_import(page, csv_path):
@@ -124,12 +135,5 @@ def main():
               f"Check the Raisugar dashboard for any Failed messages that may need manual resending.")
 
 
-def test_with_own_csv():
-    batch = read_batch_from_csv(BATCH_FILE)
-    success = upload_to_raisugar(BATCH_FILE, batch)
-    print("SUCCESS" if success else "FAILED — see logs above")
-
-
 if __name__ == "__main__":
-    test_with_own_csv()  # TEMPORARY: testing online run first, no Google Sheets involved
-    # main()
+    main()
