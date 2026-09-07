@@ -10,7 +10,7 @@ from playwright.sync_api import sync_playwright, expect
 SPREADSHEET_ID = "1JOUh9RC_tnf9Bin8kZADOKE_Uo1lN_xfiDbQ2gLfyXY"  # Block Farming / Leads Data
 SMS_EXPORT_TAB = "SMS Export"
 STATE_TAB = "Automation State"
-BATCH_SIZE = 189
+BATCH_SIZE = 50
 BATCH_FILE = "sms.csv"
 RAISUGAR_MESSAGE_URL = "https://raisugar.com/xsender/kabras/messages/50"
 
