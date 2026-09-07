@@ -1,9 +1,7 @@
 name: Send SMS Batch
 
 on:
-  schedule:
-    - cron: '*/15 3-14 * * *'
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 jobs:
   send-sms:
