@@ -16,10 +16,25 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          pip install gspread google-auth python-dotenv playwright
-          playwright install --with-deps chromium
+      - name: Install Python dependencies
+        run: pip install gspread google-auth python-dotenv playwright
+
+      - name: Get installed Playwright version
+        run: echo "PLAYWRIGHT_VERSION=$(pip show playwright | grep -i version | cut -d' ' -f2)" >> $GITHUB_ENV
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}
+
+      - name: Install Playwright browser binary (only if cache missed)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: playwright install chromium
+
+      - name: Install system dependencies (every run — fast, no download)
+        run: playwright install-deps chromium
 
       - name: Run SMS sender
         env:
