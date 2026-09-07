@@ -8,7 +8,7 @@ from playwright.sync_api import sync_playwright, expect
 
 # --- Configuration ---
 SPREADSHEET_ID = "1JOUh9RC_tnf9Bin8kZADOKE_Uo1lN_xfiDbQ2gLfyXY"  # Block Farming / Leads Data
-SMS_EXPORT_TAB = "SMS Test"
+SMS_EXPORT_TAB = "SMS Export"
 STATE_TAB = "Automation State"
 BATCH_SIZE = 5
 BATCH_FILE = "sms.csv"
