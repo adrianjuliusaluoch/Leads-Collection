@@ -1,4 +1,5 @@
 import os
+import json
 import csv
 import gspread
 from dotenv import load_dotenv
@@ -21,7 +22,8 @@ RAISUGAR_PASSWORD = os.environ["RAISUGAR_PASSWORD"]
 
 
 def get_client():
-    creds = Credentials.from_service_account_file("credentials.json", scopes=SCOPES)
+    creds_json = json.loads(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
+    creds = Credentials.from_service_account_info(creds_json, scopes=SCOPES)
     return gspread.authorize(creds)
 
 
@@ -68,7 +70,7 @@ def do_upload_and_import(page, csv_path):
 
 def upload_to_raisugar(csv_path, batch):
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=False)
+        browser = playwright.chromium.launch(headless=True)
         context = browser.new_context()
         page = context.new_page()
 
@@ -129,5 +131,5 @@ def test_with_own_csv():
 
 
 if __name__ == "__main__":
-    test_with_own_csv()
+    test_with_own_csv()  # TEMPORARY: testing online run first, no Google Sheets involved
     # main()
