@@ -1,4 +1,4 @@
-name: Send SMS Batch
+name: Send Batch SMS
 
 on:
   workflow_dispatch:
@@ -39,4 +39,4 @@ jobs:
           RAISUGAR_EMAIL: ${{ secrets.RAISUGAR_EMAIL }}
           RAISUGAR_PASSWORD: ${{ secrets.RAISUGAR_PASSWORD }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        run: python test.py
+        run: python sms.py
