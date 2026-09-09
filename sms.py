@@ -75,7 +75,7 @@ def do_upload_and_import(page, csv_path):
     """Single attempt: open modal, upload file, click Import."""
     page.get_by_role("button", name="Import message lists").click()
     page.get_by_role("dialog").locator('input[type="file"]').set_input_files(csv_path)
-    page.get_by_text("Upload complete", exact=True).wait_for(timeout=30000)
+    page.get_by_text("Upload complete", exact=True).wait_for(timeout=300000)
     page.get_by_role("button", name="Import", exact=True).click()
 
 
@@ -92,7 +92,7 @@ def upload_to_raisugar(csv_path, batch):
         page.get_by_role("checkbox", name="Remember me").check()
         page.get_by_role("button", name="Sign in").click()
 
-        page.get_by_role("button", name="Import message lists").wait_for(timeout=30000)
+        page.get_by_role("button", name="Import message lists").wait_for(timeout=300000)
 
         do_upload_and_import(page, csv_path)
 
