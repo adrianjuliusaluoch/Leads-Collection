@@ -39,4 +39,10 @@ jobs:
           RAISUGAR_EMAIL: ${{ secrets.RAISUGAR_EMAIL }}
           RAISUGAR_PASSWORD: ${{ secrets.RAISUGAR_PASSWORD }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        run: python sms.py
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 5
+          max_attempts: 2
+          retry_wait_seconds: 30
+          retry_on: error
+          command: python sms.py
