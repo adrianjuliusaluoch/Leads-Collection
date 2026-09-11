@@ -44,5 +44,5 @@ jobs:
           timeout_minutes: 5
           max_attempts: 2
           retry_wait_seconds: 30
-          retry_on: error
+          retry_on: any
           command: python sms.py
